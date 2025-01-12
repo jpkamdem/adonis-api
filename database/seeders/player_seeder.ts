@@ -6,39 +6,39 @@ export default class extends BaseSeeder {
     // Write your database queries inside the run method
     await Player.createMany([
       {
-        first_name: 'micheal',
-        last_name: 'kaiser',
+        firstName: 'micheal',
+        lastName: 'kaiser',
         number: 9,
         teamId: 1,
         position: 'fw',
       },
       {
-        first_name: 'reo',
-        last_name: 'mikage',
+        firstName: 'reo',
+        lastName: 'mikage',
         number: 8,
         teamId: 2,
-        position: 'mf',
+        position: 'def',
       },
       {
-        first_name: 'meguru',
-        last_name: 'bachira',
+        firstName: 'meguru',
+        lastName: 'bachira',
         number: 7,
         teamId: 3,
-        position: 'mf',
+        position: 'def',
       },
       {
-        first_name: 'oliver',
-        last_name: 'aiku',
+        firstName: 'oliver',
+        lastName: 'aiku',
         number: 4,
         teamId: 4,
         position: 'def',
       },
       {
-        first_name: 'charles',
-        last_name: 'chevalier',
+        firstName: 'charles',
+        lastName: 'chevalier',
         number: 6,
         teamId: 5,
-        position: 'mf',
+        position: 'def',
       },
     ])
   }

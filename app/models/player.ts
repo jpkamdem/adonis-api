@@ -1,15 +1,16 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
+import type { Position, Status } from '../enums.js'
 
 export default class Player extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
   @column()
-  declare first_name: string
+  declare firstName: string
 
   @column()
-  declare last_name: string
+  declare lastName: string
 
   @column()
   declare teamId: number
@@ -18,10 +19,10 @@ export default class Player extends BaseModel {
   declare number: number
 
   @column()
-  declare position: 'gk' | 'def' | 'mf' | 'fw'
+  declare position: Position
 
   @column()
-  declare status: 'opérationnel' | 'blessé' | 'suspendu' | 'inconnu'
+  declare status: Status
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
