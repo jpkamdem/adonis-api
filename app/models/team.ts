@@ -14,6 +14,9 @@ export default class Team extends BaseModel {
   @column()
   declare loses: number
 
+  @column()
+  declare draws: number
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
