@@ -1,0 +1,35 @@
+services:
+  db:
+    container_name: db
+    image: postgres:16
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      DATABASE_URL: ${DATABASE_URL}
+    volumes:
+      - web_project_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:8.14
+    environment:
+      PGADMIN_DEFAULT_EMAIL: jk@proton.me
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - '5050:80'
+    depends_on:
+      - db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - app-network
+volumes:
+  web_project_data:
+  pgadmin_data:
+networks:
+  app-network:
+    driver: bridge
