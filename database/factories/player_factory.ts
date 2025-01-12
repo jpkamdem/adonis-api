@@ -2,6 +2,7 @@ import factory from '@adonisjs/lucid/factories'
 import Player from '#models/player'
 import { Position } from '../../app/enums.js'
 import { randomIntFromInterval } from '../../app/utils.js'
+import { TeamFactory } from './team_factory.js'
 
 const posArray: [Position, Position, Position, Position] = ['gk', 'def', 'mf', 'fw']
 const randomPos = posArray[randomIntFromInterval(0, posArray.length)]
@@ -16,4 +17,5 @@ export const PlayerFactory = factory
       teamId: randomIntFromInterval(1, 10),
     }
   })
+  .relation('team', () => TeamFactory)
   .build()

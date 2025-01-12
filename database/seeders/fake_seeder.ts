@@ -7,9 +7,9 @@ import { BaseSeeder } from '@adonisjs/lucid/seeders'
 export default class extends BaseSeeder {
   async run() {
     // Write your database queries inside the run method
-    await UserFactory.createMany(25)
+    await UserFactory.with('posts').createMany(25)
     await PostFactory.createMany(99)
-    await TeamFactory.createMany(10)
+    await TeamFactory.with('players').createMany(10)
     await PlayerFactory.createMany(70)
   }
 }

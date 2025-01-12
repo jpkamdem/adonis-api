@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import type { Position, Status } from '../enums.js'
+import Team from './team.js'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 export default class Player extends BaseModel {
   @column({ isPrimary: true })
@@ -29,4 +31,7 @@ export default class Player extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @belongsTo(() => Team)
+  declare team: BelongsTo<typeof Team>
 }
