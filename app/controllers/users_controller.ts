@@ -4,12 +4,6 @@ import { extractErrorMessage } from '../utils.js'
 import { emailRegex } from '../enums.js'
 import db from '@adonisjs/lucid/services/db'
 
-type UserBody = HttpContext & {
-  email: string
-  username: string
-  password: string
-}
-
 export default class UsersController {
   async getAllUsers() {
     try {
@@ -123,12 +117,8 @@ export default class UsersController {
     }
   }
 
-  async updateUser({ request }: Partial<UserBody>) {
+  async updateUser({ request }: HttpContext) {
     try {
-      if (!request) {
-        return
-      }
-
       const id = request.params().id
       if (!id) {
         return { message: 'ID manquant' }
