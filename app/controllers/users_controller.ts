@@ -76,12 +76,13 @@ export default class UsersController {
         .from('users')
         .join('posts', 'users.id', '=', 'posts.user_id')
         .select(
-          'users.id',
+          'users.id as userId',
           'users.username',
           'users.email',
           'users.role',
           'users.created_at as userCreatedAt',
           'users.updated_at as usersUpdatedAt',
+          'posts.id as postId',
           'posts.title',
           'posts.content',
           'posts.created_at as postsCreatedAt',

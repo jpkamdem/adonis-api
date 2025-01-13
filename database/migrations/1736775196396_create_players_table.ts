@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('first_name', 50).notNullable()
       table.string('last_name', 50).notNullable()
-      table.integer('team_id').unsigned().references('teams.id').notNullable()
+      table.integer('team_id').unsigned().references('teams.id').notNullable().onDelete('CASCADE')
       table.integer('number', 2).unsigned().notNullable()
       table.enu('position', ['gk', 'def', 'mf', 'fw']).notNullable()
       table

@@ -9,6 +9,7 @@
 
 const UsersController = () => import('#controllers/users_controller')
 const PostsController = () => import('#controllers/posts_controller')
+const TeamsController = () => import('#controllers/teams_controller')
 import router from '@adonisjs/core/services/router'
 
 router.get('/', async () => {
@@ -37,5 +38,15 @@ router
         router.delete('/:id', [PostsController, 'deletePost'])
       })
       .prefix('/posts')
+    router
+      .group(() => {
+        router.get('/', [TeamsController, 'getAllTeams'])
+        router.get('/:id', [TeamsController, 'getTeamById'])
+        router.get('/players/:id', [TeamsController, 'getTeamPlayers'])
+        router.post('/', [TeamsController, 'createTeam'])
+        router.patch('/:id', [TeamsController, 'updateTeam'])
+        router.delete('/:id', [TeamsController, 'deleteTeam'])
+      })
+      .prefix('/teams')
   })
   .prefix('/api')
