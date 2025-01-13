@@ -17,7 +17,7 @@
 */
 
 /**
- * Register hook to process TypeScript files using ts-node-maintained
+ * Register hook to process TypeScript files using ts-node
  */
 import 'ts-node-maintained/register/esm'
 
