@@ -167,7 +167,7 @@ export default class UsersController {
       }
 
       await user.save()
-      return { message: `Modification(s) de l'utilisateur réussie(s) avec succès` }
+      return { message: `Modification(s) de l'utilisateur effectuée(s) avec succès` }
     } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }

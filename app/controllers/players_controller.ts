@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 import Player from '#models/player'
 import { extractErrorMessage } from '../utils.js'
+import type { Position } from '../enums.js'
 
 export default class PlayersController {
   async getAllPlayers() {
@@ -102,8 +103,7 @@ export default class PlayersController {
         }
 
         const posCheck = ['gk', 'def', 'mf', 'fw'] as const
-        type Poste = (typeof posCheck)[number]
-        const isPos = (x: any): x is Poste => posCheck.includes(x)
+        const isPos = (x: any): x is Position => posCheck.includes(x)
         if (!isPos(position)) {
           return { message: 'Poste invalide' }
         }
