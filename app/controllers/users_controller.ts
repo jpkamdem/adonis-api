@@ -2,6 +2,7 @@ import { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import { extractErrorMessage } from '../utils.js'
 import { emailRegex } from '../enums.js'
+import db from '@adonisjs/lucid/services/db'
 
 type UserBody = HttpContext & {
   email: string
@@ -37,6 +38,58 @@ export default class UsersController {
 
       return user
     } catch (error: unknown) {
+      return { message: extractErrorMessage(error) }
+    }
+  }
+
+  async getUserPosts({ request }: HttpContext) {
+    try {
+      const id = request.params().id
+      if (!id) {
+        return { message: 'ID manquant' }
+      }
+
+      const user = await User.findOrFail(id)
+      if (!user) {
+        return { message: 'Utilisateur introuvable' }
+      }
+
+      // const userWithPosts = await db.rawQuery(
+      //   `SELECT
+      //       users.id,
+      //       users.email,
+      //       users.role,
+      //       users.created_at AS users_created_at,
+      //       users.updated_at AS users_updated_at,
+      //       posts.title,
+      //       posts.content,
+      //       posts.created_at AS posts_created_at,
+      //       posts.updated_at AS posts_updated_at
+      //       FROM users
+      //       JOIN posts
+      //       ON users.id = posts.user_id
+      //       WHERE users.id = ${id};`
+      // )
+
+      const userWithPosts = db
+        .query()
+        .from('users')
+        .join('posts', 'users.id', '=', 'posts.user_id')
+        .select(
+          'users.id',
+          'users.username',
+          'users.email',
+          'users.role',
+          'users.created_at as userCreatedAt',
+          'users.updated_at as usersUpdatedAt',
+          'posts.title',
+          'posts.content',
+          'posts.created_at as postsCreatedAt',
+          'posts.updated_at as postsUpdatedAt'
+        )
+        .where('users.id', id)
+      return userWithPosts
+    } catch (error) {
       return { message: extractErrorMessage(error) }
     }
   }
@@ -113,7 +166,7 @@ export default class UsersController {
       }
 
       await user.save()
-      return { message: `Modification(s) réussie(s) avec succès` }
+      return { message: `Modification(s) de l'utilisateur réussie(s) avec succès` }
     } catch (error) {
       return { message: extractErrorMessage(error) }
     }
