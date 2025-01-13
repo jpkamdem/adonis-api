@@ -12,7 +12,7 @@ export default class TeamsController {
       }
 
       return teams
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }
@@ -26,7 +26,7 @@ export default class TeamsController {
 
       const team = await Team.findOrFail(id)
       return team
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }
@@ -62,7 +62,7 @@ export default class TeamsController {
         .where('teams.id', id)
 
       return teamWithPlayers
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }
@@ -83,7 +83,7 @@ export default class TeamsController {
 
       await team.save()
       return { message: 'Équipe créée avec succès' }
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }
@@ -112,7 +112,7 @@ export default class TeamsController {
       team.name = name
       await team.save()
       return { message: "Modification de l'équipe effectuée avec succès" }
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }
@@ -131,7 +131,7 @@ export default class TeamsController {
 
       await team.delete()
       return { message: 'Équipe supprimmée avec succès' }
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }

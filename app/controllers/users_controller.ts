@@ -90,7 +90,7 @@ export default class UsersController {
         )
         .where('users.id', id)
       return userWithPosts
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }
@@ -168,7 +168,7 @@ export default class UsersController {
 
       await user.save()
       return { message: `Modification(s) de l'utilisateur réussie(s) avec succès` }
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }
@@ -187,7 +187,7 @@ export default class UsersController {
 
       await user.delete()
       return { message: `Utilisateur supprimé avec succès` }
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }

@@ -12,7 +12,7 @@ export default class PostsController {
       }
 
       return posts
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }
@@ -30,7 +30,7 @@ export default class PostsController {
       }
 
       return post
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }
@@ -53,7 +53,7 @@ export default class PostsController {
 
       await post.save()
       return { message: 'Post créé avec succès' }
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }
@@ -83,7 +83,7 @@ export default class PostsController {
 
       await post.save()
       return { message: 'Modification(s) du post effectuée(s) avec succès' }
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }
@@ -101,7 +101,7 @@ export default class PostsController {
 
       await post.delete()
       return { message: 'Post supprimé avec succès' }
-    } catch (error) {
+    } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }
