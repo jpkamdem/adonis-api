@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany, hasOne } from '@adonisjs/lucid/orm'
 import Player from './player.js'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
+import FactGame from './fact_game.js'
 
 export default class Team extends BaseModel {
   @column({ isPrimary: true })
@@ -27,4 +28,16 @@ export default class Team extends BaseModel {
 
   @hasMany(() => Player)
   declare players: HasMany<typeof Player>
+
+  @hasOne(() => FactGame, {
+    localKey: 'id',
+    foreignKey: 'homeTeamId',
+  })
+  declare firstTeam: HasOne<typeof FactGame>
+
+  @hasOne(() => FactGame, {
+    localKey: 'id',
+    foreignKey: 'awayTeamId',
+  })
+  declare secondTeam: HasOne<typeof FactGame>
 }
