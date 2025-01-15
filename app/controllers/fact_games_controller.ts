@@ -37,14 +37,14 @@ export default class FactGamesController {
 
   async createGame({ request }: HttpContext) {
     try {
-      const { homeTeamId, awayTeamId } = request.params().id
+      const { homeTeamId, awayTeamId } = request.body()
       if (!homeTeamId || !awayTeamId) {
         return { message: 'Veuillez remplir tous les champs' }
       }
 
-      if (!Number(homeTeamId) || !Number(awayTeamId)) {
-        return { message: 'Veuillez entrer des nombres' }
-      }
+      // if (!Number(homeTeamId) || !Number(awayTeamId)) {
+      //   return { message: 'Veuillez entrer des nombres' }
+      // }
 
       if (homeTeamId === awayTeamId) {
         return { message: 'Les 2 équipes doivent être différentes' }
