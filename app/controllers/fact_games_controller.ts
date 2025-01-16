@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 import FactGame from '#models/fact_game'
 import { extractErrorMessage, randomIntFromInterval } from '../utils.js'
+import Team from '#models/team'
 
 export default class FactGamesController {
   async getAllGames() {
@@ -35,29 +36,29 @@ export default class FactGamesController {
     }
   }
 
-  async createGame({ request }: HttpContext) {
+  async createGame() {
     try {
-      const { homeTeamId, awayTeamId } = request.body()
-      if (!homeTeamId || !awayTeamId) {
-        return { message: 'Veuillez remplir tous les champs' }
+      const teams = await Team.all()
+      if (!teams) {
+        return { message: 'Erreur interne' }
       }
 
-      // if (!Number(homeTeamId) || !Number(awayTeamId)) {
-      //   return { message: 'Veuillez entrer des nombres' }
-      // }
-
-      if (homeTeamId === awayTeamId) {
-        return { message: 'Les 2 équipes doivent être différentes' }
+      if (teams.length <= 1) {
+        return { message: "Il n'y a pas assez d'équipes pour simuler un match" }
       }
+
+      const teamIds = teams.map((team) => team.id)
+      const homeId = teamIds[randomIntFromInterval(0, teamIds.length)]
+      let awayId: number
+      do {
+        awayId = teamIds[randomIntFromInterval(0, teamIds.length)]
+      } while (homeId === awayId)
 
       const game = new FactGame()
-      game.homeTeamId = homeTeamId
-      game.awayTeamId = awayTeamId
-      const firstScore = randomIntFromInterval(0, 5)
-      game.homeScore = firstScore
-      const secondScore = randomIntFromInterval(0, 5)
-      game.awayScore = secondScore
-
+      game.homeTeamId = homeId
+      game.awayTeamId = awayId
+      game.homeScore = randomIntFromInterval(0, 5)
+      game.awayScore = randomIntFromInterval(0, 5)
       await game.save()
       return { message: 'Match simulé avec succès' }
     } catch (error: unknown) {
