@@ -70,17 +70,17 @@ export default class UsersController {
         .from('users')
         .join('posts', 'users.id', '=', 'posts.user_id')
         .select(
-          'users.id as userId',
+          'users.id as user_id',
           'users.username',
           'users.email',
           'users.role',
-          'users.created_at as userCreatedAt',
-          'users.updated_at as usersUpdatedAt',
-          'posts.id as postId',
+          'users.created_at as users_created_at',
+          'users.updated_at as users_updated_at',
+          'posts.id as post_id',
           'posts.title',
           'posts.content',
-          'posts.created_at as postsCreatedAt',
-          'posts.updated_at as postsUpdatedAt'
+          'posts.created_at as posts_created_at',
+          'posts.updated_at as posts_updated_at'
         )
         .where('users.id', id)
       return userWithPosts

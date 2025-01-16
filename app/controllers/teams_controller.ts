@@ -48,10 +48,10 @@ export default class TeamsController {
         .from('teams')
         .join('players', 'teams.id', '=', 'players.team_id')
         .select(
-          'players.first_name as playerFirstName',
-          'players.last_name as playerLastName',
+          'players.first_name as p_firstname',
+          'players.last_name as p_lastname',
           'players.team_id',
-          'teams.name as teamName',
+          'teams.name as team_name',
           'teams.wins',
           'teams.loses',
           'teams.draws',
