@@ -5,7 +5,6 @@ import { randomIntFromInterval } from '../../app/utils.js'
 import { TeamFactory } from './team_factory.js'
 
 const posArray: [Position, Position, Position, Position] = ['gk', 'def', 'mf', 'fw']
-const randomPos = posArray[randomIntFromInterval(0, posArray.length - 1)]
 
 export const PlayerFactory = factory
   .define(Player, async ({ faker }) => {
@@ -13,7 +12,7 @@ export const PlayerFactory = factory
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       number: randomIntFromInterval(1, 99),
-      position: randomPos,
+      position: posArray[randomIntFromInterval(0, posArray.length)],
       teamId: randomIntFromInterval(1, 10),
     }
   })
