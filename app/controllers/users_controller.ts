@@ -3,6 +3,7 @@ import User from '#models/user'
 import { extractErrorMessage } from '../utils.js'
 import { emailRegex } from '../enums.js'
 import db from '@adonisjs/lucid/services/db'
+import hash from '@adonisjs/core/services/hash'
 
 export default class UsersController {
   async getAllUsers() {

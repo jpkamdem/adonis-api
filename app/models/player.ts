@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column, manyToMany } from '@adonisjs/lucid/orm'
 import type { Position, Status } from '../enums.js'
 import Team from './team.js'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
+import Incident from './incident.js'
 
 export default class Player extends BaseModel {
   @column({ isPrimary: true })
@@ -34,4 +35,7 @@ export default class Player extends BaseModel {
 
   @belongsTo(() => Team)
   declare team: BelongsTo<typeof Team>
+
+  @manyToMany(() => Incident)
+  declare incidents: ManyToMany<typeof Incident>
 }

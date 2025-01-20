@@ -3,6 +3,7 @@ import Player from '#models/player'
 import { Position } from '../../app/enums.js'
 import { randomIntFromInterval } from '../../app/utils.js'
 import { TeamFactory } from './team_factory.js'
+import Incident from '#models/incident'
 
 const posArray: [Position, Position, Position, Position] = ['gk', 'def', 'mf', 'fw']
 
@@ -17,4 +18,5 @@ export const PlayerFactory = factory
     }
   })
   .relation('team', () => TeamFactory)
+  .relation('incidents', () => Incident)
   .build()

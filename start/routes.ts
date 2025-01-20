@@ -13,6 +13,7 @@ const TeamsController = () => import('#controllers/teams_controller')
 const PlayersController = () => import('#controllers/players_controller')
 const IncidentsController = () => import('#controllers/incidents_controller')
 const FactGamesController = () => import('#controllers/fact_games_controller')
+const SessionController = () => import('#controllers/session_controller')
 import router from '@adonisjs/core/services/router'
 
 router.get('/', async () => {
@@ -76,5 +77,10 @@ router
         router.post('/', [FactGamesController, 'createGame'])
       })
       .prefix('/games')
+    router
+      .group(() => {
+        router.post('/login', [SessionController, 'store'])
+      })
+      .prefix('/session')
   })
   .prefix('/api')
