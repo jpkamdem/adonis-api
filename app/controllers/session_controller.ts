@@ -14,7 +14,9 @@ export default class SessionController {
 
       const user = await User.verifyCredentials(email, password)
 
-      return { message: 'Connecté' }
+      const token = await User.accessTokens.create(user)
+
+      return { message: 'Connecté', token: token }
     } catch (error: unknown) {
       console.log(error)
       return { message: extractErrorMessage(error) }
