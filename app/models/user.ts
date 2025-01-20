@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, beforeSave, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import Post from './post.js'
@@ -37,12 +37,14 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @hasMany(() => Post)
   declare posts: HasMany<typeof Post>
 
-  @beforeSave()
-  public static async hashPassword(user: User) {
-    if (user.$dirty.password) {
-      user.password = await hash.make(user.password)
-    }
-  }
+  // @beforeSave()
+  // public static async hashPassword(user: User) {
+  //   if (user.$dirty.password) {
+  //     if (!user.password.startsWith('$scrypt$')) {
+  //       user.password = await hash.make(user.password)
+  //     }
+  //   }
+  // }
 
   static accessTokens = DbAccessTokensProvider.forModel(User, {
     expiresIn: '900',

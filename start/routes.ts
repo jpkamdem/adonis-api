@@ -80,7 +80,8 @@ router
     router
       .group(() => {
         router.post('/login', [SessionController, 'store'])
+        router.post('/register', [SessionController, 'handleRegister'])
       })
-      .prefix('/session')
+      .prefix('/auth')
   })
   .prefix('/api')
