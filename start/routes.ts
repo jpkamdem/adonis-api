@@ -36,7 +36,7 @@ router
       .group(() => {
         router.get('/', [PostsController, 'getAllPosts'])
         router.get('/:id', [PostsController, 'getPostById'])
-        router.post('/', [PostsController, 'createPost'])
+        router.post('/:id', [PostsController, 'createPost'])
         router.patch('/:id', [PostsController, 'updatePost'])
         router.delete('/:id', [PostsController, 'deletePost'])
       })

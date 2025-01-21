@@ -68,7 +68,7 @@ export default class UsersController {
           'posts.updated_at as posts_updated_at'
         )
         .where('users.id', id)
-      return response.status(200).json(userWithPosts)
+      return userWithPosts
     } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
