@@ -9,12 +9,12 @@ export default class TeamsController {
     try {
       const teams = await Team.all()
       if (!teams) {
-        return response.status(404).json({ message: 'Erreur lors de la récupération des équipes' })
+        return response.abort({ message: 'Erreur lors de la récupération des équipes' })
       }
 
       return response.status(200).json(teams)
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
@@ -22,13 +22,17 @@ export default class TeamsController {
     try {
       const id = request.params().id
       if (!id) {
-        return response.status(404).json({ message: 'ID manquant' })
+        return response.abort({ message: 'ID manquant' })
       }
 
       const team = await Team.findOrFail(id)
+      if (!team) {
+        return response.abort({ message: 'Équipe introuvable' })
+      }
+
       return response.status(200).json(team)
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
@@ -36,12 +40,12 @@ export default class TeamsController {
     try {
       const id = request.params().id
       if (!id) {
-        return response.status(404).json({ message: 'ID manquant' })
+        return response.abort({ message: 'ID manquant' })
       }
 
       const team = await Team.findOrFail(id)
       if (!team) {
-        return response.status(404).json({ message: 'Équipe introuvable' })
+        return response.abort({ message: 'Équipe introuvable' })
       }
 
       const teamWithPlayers = db
@@ -64,7 +68,7 @@ export default class TeamsController {
 
       return teamWithPlayers
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
@@ -78,7 +82,7 @@ export default class TeamsController {
       await team.save()
       return response.status(201).json({ message: 'Équipe créée avec succès' })
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
@@ -86,12 +90,12 @@ export default class TeamsController {
     try {
       const id = request.params().id
       if (!id) {
-        return response.status(404).json({ message: 'ID manquant' })
+        return response.abort({ message: 'ID manquant' })
       }
 
       const team = await Team.findOrFail(id)
       if (!team) {
-        return response.status(404).json({ message: 'Équipe introuvable' })
+        return response.abort({ message: 'Équipe introuvable' })
       }
 
       const { name } = await request.validateUsing(createTeamValidator)
@@ -102,7 +106,7 @@ export default class TeamsController {
         .status(201)
         .json({ message: "Modification de l'équipe effectuée avec succès" })
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
@@ -110,18 +114,18 @@ export default class TeamsController {
     try {
       const id = request.params().id
       if (!id) {
-        return response.status(404).json({ message: 'ID manquant' })
+        return response.abort({ message: 'ID manquant' })
       }
 
       const team = await Team.findOrFail(id)
       if (!team) {
-        return response.status(404).json({ message: 'Équipe introuvable' })
+        return response.abort({ message: 'Équipe introuvable' })
       }
 
       await team.delete()
       return response.status(204).json({ message: 'Équipe supprimmée avec succès' })
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 }

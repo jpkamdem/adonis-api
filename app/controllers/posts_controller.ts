@@ -8,12 +8,12 @@ export default class PostsController {
     try {
       const posts = await Post.all()
       if (!posts) {
-        return response.status(404).json({ message: 'Erreur lors de la récupération des posts' })
+        return response.abort({ message: 'Erreur lors de la récupération des posts' })
       }
 
       return response.status(200).json(posts)
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
@@ -21,17 +21,17 @@ export default class PostsController {
     try {
       const id = request.params().id
       if (!id) {
-        return response.status(404).json({ message: 'ID manquant' })
+        return response.abort({ message: 'ID manquant' })
       }
 
       const post = await Post.findOrFail(id)
       if (!post) {
-        return response.status(404).json({ message: 'Post introuvable' })
+        return response.abort({ message: 'Post introuvable' })
       }
 
       return response.status(200).json(post)
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
@@ -41,7 +41,7 @@ export default class PostsController {
 
       const id = request.params().id
       if (!id) {
-        return response.status(404).json({ message: 'ID manquant' })
+        return response.abort({ message: 'ID manquant' })
       }
 
       const post = new Post()
@@ -52,7 +52,7 @@ export default class PostsController {
       await post.save()
       return response.status(201).json({ message: 'Post créé avec succès' })
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
@@ -60,12 +60,12 @@ export default class PostsController {
     try {
       const id = request.params().id
       if (!id) {
-        return response.status(404).json({ message: 'ID manquant' })
+        return response.abort({ message: 'ID manquant' })
       }
 
       const post = await Post.findOrFail(id)
       if (!post) {
-        return response.status(404).json({ message: 'Post introuvable' })
+        return response.abort({ message: 'Post introuvable' })
       }
 
       const { title, content } = await request.validateUsing(createPostValidator)
@@ -83,7 +83,7 @@ export default class PostsController {
         .status(201)
         .json({ message: 'Modification(s) du post effectuée(s) avec succès' })
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
@@ -91,18 +91,18 @@ export default class PostsController {
     try {
       const id = request.params().id
       if (!id) {
-        return response.status(404).json({ message: 'ID manquant' })
+        return response.abort({ message: 'ID manquant' })
       }
 
       const post = await Post.findOrFail(id)
       if (!post) {
-        return response.status(404).json({ message: 'Post introuvable' })
+        return response.abort({ message: 'Post introuvable' })
       }
 
       await post.delete()
       return response.status(204).json({ message: 'Post supprimé avec succès' })
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 }

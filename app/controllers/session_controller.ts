@@ -5,25 +5,25 @@ import { emailRegex } from '../enums.js'
 import { loginUserValidation, registerUserValidation } from '#validators/auth'
 
 export default class SessionController {
-  async store({ request }: HttpContext) {
+  async store({ request, response }: HttpContext) {
     try {
       const { email, password } = await request.validateUsing(loginUserValidation)
       if (!emailRegex.test(email)) {
-        return { message: 'Votre email est invalide' }
+        return response.abort({ message: 'Votre email est invalide' })
       }
 
       const user = await User.verifyCredentials(email, password)
 
       const token = await User.accessTokens.create(user)
 
-      return { message: 'Connecté', token: token }
+      return response.status(201).json({ message: 'Connecté', token: token })
     } catch (error: unknown) {
       console.log(error)
-      return { message: extractErrorMessage(error) }
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
-  async handleRegister({ request }: HttpContext) {
+  async handleRegister({ request, response }: HttpContext) {
     try {
       const { email, username, password } = await request.validateUsing(registerUserValidation)
 
@@ -32,10 +32,10 @@ export default class SessionController {
       user.username = username
       user.password = password
       await user.save()
-      return { message: 'Utilisateur créé' }
+      return response.status(201).json({ message: 'Utilisateur créé' })
     } catch (error: unknown) {
       console.log(error)
-      return { message: extractErrorMessage(error) }
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 }

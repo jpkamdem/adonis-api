@@ -9,14 +9,12 @@ export default class UsersController {
     try {
       const users = await User.all()
       if (!users) {
-        return response
-          .status(404)
-          .json({ message: 'Erreur lors de la récupération des utilisateurs' })
+        response.abort({ message: 'Erreur lors de la récupération des utilisateurs' })
       }
 
       return response.status(200).json(users)
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
@@ -24,17 +22,17 @@ export default class UsersController {
     try {
       const id = request.params().id
       if (!id) {
-        return response.status(404).json({ message: 'ID manquant' })
+        return response.abort({ message: 'ID manquant' })
       }
 
       const user = await User.findOrFail(id)
       if (!user) {
-        return response.status(404).json({ message: 'Utilisateur introuvable' })
+        return response.abort({ message: 'Utilisateur introuvable' })
       }
 
       return user
     } catch (error: unknown) {
-      return { message: extractErrorMessage(error) }
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
@@ -42,12 +40,12 @@ export default class UsersController {
     try {
       const id = request.params().id
       if (!id) {
-        return response.status(404).json({ message: 'ID manquant' })
+        return response.abort({ message: 'ID manquant' })
       }
 
       const user = await User.findOrFail(id)
       if (!user) {
-        return response.status(404).json({ message: 'Utilisateur introuvable' })
+        return response.abort({ message: 'Utilisateur introuvable' })
       }
 
       const userWithPosts = db
@@ -70,7 +68,7 @@ export default class UsersController {
         .where('users.id', id)
       return userWithPosts
     } catch (error: unknown) {
-      return { message: extractErrorMessage(error) }
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
@@ -78,12 +76,12 @@ export default class UsersController {
     try {
       const id = request.params().id
       if (!id) {
-        return response.status(404).json({ message: 'ID manquant' })
+        return response.abort({ message: 'ID manquant' })
       }
 
       const user = await User.findOrFail(id)
       if (!user) {
-        return response.status(404).json({ message: 'Utilisateur introuvable' })
+        return response.abort({ message: 'Utilisateur introuvable' })
       }
 
       const { email, username, password } = await request.validateUsing(userUpdateValidator)
@@ -105,7 +103,7 @@ export default class UsersController {
         .status(201)
         .json({ message: `Modification(s) de l'utilisateur effectuée(s) avec succès` })
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 
@@ -113,18 +111,18 @@ export default class UsersController {
     try {
       const id = request.params().id
       if (!id) {
-        return response.status(404).json({ message: 'ID manquant' })
+        return response.abort({ message: 'ID manquant' })
       }
 
       const user = await User.findOrFail(id)
       if (!user) {
-        return response.status(404).json({ message: 'Utilisateur introuvable' })
+        return response.abort({ message: 'Utilisateur introuvable' })
       }
 
       await user.delete()
       return response.status(204).json({ message: `Utilisateur supprimé avec succès` })
     } catch (error: unknown) {
-      return response.status(404).json({ message: extractErrorMessage(error) })
+      return response.abort({ message: extractErrorMessage(error) })
     }
   }
 }
