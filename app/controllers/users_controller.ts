@@ -1,7 +1,6 @@
 import { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import { extractErrorMessage } from '../utils.js'
-import { emailRegex } from '../enums.js'
 import db from '@adonisjs/lucid/services/db'
 import { userUpdateValidator } from '#validators/user'
 

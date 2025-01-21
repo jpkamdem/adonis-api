@@ -2,45 +2,46 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Team from '#models/team'
 import db from '@adonisjs/lucid/services/db'
 import { extractErrorMessage } from '../utils.js'
+import { createTeamValidator } from '#validators/team'
 
 export default class TeamsController {
-  async getAllTeams() {
+  async getAllTeams({ response }: HttpContext) {
     try {
       const teams = await Team.all()
       if (!teams) {
-        return { message: 'Erreur lors de la récupération des équipes' }
+        return response.status(404).json({ message: 'Erreur lors de la récupération des équipes' })
       }
 
-      return teams
+      return response.status(200).json(teams)
     } catch (error: unknown) {
-      return { message: extractErrorMessage(error) }
+      return response.status(404).json({ message: extractErrorMessage(error) })
     }
   }
 
-  async getTeamById({ request }: HttpContext) {
+  async getTeamById({ request, response }: HttpContext) {
     try {
       const id = request.params().id
       if (!id) {
-        return { message: 'ID manquant' }
+        return response.status(404).json({ message: 'ID manquant' })
       }
 
       const team = await Team.findOrFail(id)
-      return team
+      return response.status(200).json(team)
     } catch (error: unknown) {
-      return { message: extractErrorMessage(error) }
+      return response.status(404).json({ message: extractErrorMessage(error) })
     }
   }
 
-  async getTeamPlayers({ request }: HttpContext) {
+  async getTeamPlayers({ request, response }: HttpContext) {
     try {
       const id = request.params().id
       if (!id) {
-        return { message: 'ID manquant' }
+        return response.status(404).json({ message: 'ID manquant' })
       }
 
       const team = await Team.findOrFail(id)
       if (!team) {
-        return { message: 'Équipe introuvable' }
+        return response.status(404).json({ message: 'Équipe introuvable' })
       }
 
       const teamWithPlayers = db
@@ -61,78 +62,66 @@ export default class TeamsController {
         )
         .where('teams.id', id)
 
-      return teamWithPlayers
+      return response.status(200).json(teamWithPlayers)
     } catch (error: unknown) {
-      return { message: extractErrorMessage(error) }
+      return response.status(404).json({ message: extractErrorMessage(error) })
     }
   }
 
-  async createTeam({ request }: HttpContext) {
+  async createTeam({ request, response }: HttpContext) {
     try {
-      const { name } = request.body()
-      if (!name) {
-        return { message: 'Veuillez remplir le champ' }
-      }
-
-      if (typeof name !== 'string') {
-        return { message: 'Veuillez entrer une chaîne de caractère' }
-      }
+      const { name } = await request.validateUsing(createTeamValidator)
 
       const team = new Team()
       team.name = name
 
       await team.save()
-      return { message: 'Équipe créée avec succès' }
+      return response.status(201).json({ message: 'Équipe créée avec succès' })
     } catch (error: unknown) {
-      return { message: extractErrorMessage(error) }
+      return response.status(404).json({ message: extractErrorMessage(error) })
     }
   }
 
-  async updateTeam({ request }: HttpContext) {
+  async updateTeam({ request, response }: HttpContext) {
     try {
       const id = request.params().id
       if (!id) {
-        return { message: 'ID manquant' }
+        return response.status(404).json({ message: 'ID manquant' })
       }
 
       const team = await Team.findOrFail(id)
       if (!team) {
-        return { message: 'Équipe introuvable' }
+        return response.status(404).json({ message: 'Équipe introuvable' })
       }
 
-      const { name } = request.body()
-      if (!name) {
-        return { message: 'Veuillez remplir le champ' }
-      }
-
-      if (typeof name !== 'string') {
-        return { message: 'Veuillez entrer une chaîne de caractère' }
-      }
+      const { name } = await request.validateUsing(createTeamValidator)
 
       team.name = name
       await team.save()
-      return { message: "Modification de l'équipe effectuée avec succès" }
+      return response
+        .status(201)
+        .json({ message: "Modification de l'équipe effectuée avec succès" })
     } catch (error: unknown) {
-      return { message: extractErrorMessage(error) }
+      return response.status(404).json({ message: extractErrorMessage(error) })
     }
   }
 
-  async deleteTeam({ request }: HttpContext) {
+  async deleteTeam({ request, response }: HttpContext) {
     try {
       const id = request.params().id
       if (!id) {
-        return { message: 'ID manquant' }
+        return response.status(404).json({ message: 'ID manquant' })
       }
 
       const team = await Team.findOrFail(id)
       if (!team) {
-        return { message: 'Équipe introuvable' }
+        return response.status(404).json({ message: 'Équipe introuvable' })
       }
 
       await team.delete()
-      return { message: 'Équipe supprimmée avec succès' }
+      return response.status(204).json({ message: 'Équipe supprimmée avec succès' })
     } catch (error: unknown) {
-      return { message: extractErrorMessage(error) }
+      return response.status(404).json({ message: extractErrorMessage(error) })
     }
   }
 }
