@@ -2,8 +2,8 @@ import vine from '@vinejs/vine'
 
 export const createPlayerValidator = vine.compile(
   vine.object({
-    firstName: vine.string().trim().minLength(4),
-    lastName: vine.string().trim().minLength(4),
+    firstName: vine.string().trim().minLength(3),
+    lastName: vine.string().trim().minLength(3),
     number: vine.number().withoutDecimals().positive(),
     position: vine.enum(['gk', 'def', 'mf', 'fw']),
     teamId: vine.number().withoutDecimals().positive(),
@@ -11,8 +11,8 @@ export const createPlayerValidator = vine.compile(
 )
 export const updatePlayerValidator = vine.compile(
   vine.object({
-    firstName: vine.string().trim().minLength(4).optional(),
-    lastName: vine.string().trim().minLength(4).optional(),
+    firstName: vine.string().trim().minLength(3).optional(),
+    lastName: vine.string().trim().minLength(3).optional(),
     number: vine.number().withoutDecimals().positive().optional(),
     position: vine.enum(['gk', 'def', 'mf', 'fw']).optional(),
     teamId: vine.number().withoutDecimals().positive().optional(),

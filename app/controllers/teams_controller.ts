@@ -72,6 +72,31 @@ export default class TeamsController {
     }
   }
 
+  async getAllTeamsWithPlayers({ response }: HttpContext) {
+    try {
+      const allTeamsWithPlayers = db
+        .query()
+        .from('teams')
+        .join('players', 'teams.id', '=', 'players.team_id')
+        .select(
+          'players.first_name as p_firstname',
+          'players.last_name as p_lastname',
+          'players.team_id',
+          'teams.name as team_name',
+          'teams.wins',
+          'teams.loses',
+          'teams.draws',
+          'players.position',
+          'players.number',
+          'players.status'
+        )
+
+      return allTeamsWithPlayers
+    } catch (error: unknown) {
+      return response.abort({ message: extractErrorMessage(error) })
+    }
+  }
+
   async createTeam({ request, response }: HttpContext) {
     try {
       const { name } = await request.validateUsing(createTeamValidator)

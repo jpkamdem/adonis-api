@@ -47,6 +47,7 @@ router
         router.get('/', [TeamsController, 'getAllTeams'])
         router.get('/:id', [TeamsController, 'getTeamById'])
         router.get('/players/:id', [TeamsController, 'getTeamPlayers'])
+        router.get('/players/get/all', [TeamsController, 'getAllTeamsWithPlayers'])
         router.post('/', [TeamsController, 'createTeam'])
         router.patch('/:id', [TeamsController, 'updateTeam'])
         router.delete('/:id', [TeamsController, 'deleteTeam'])
