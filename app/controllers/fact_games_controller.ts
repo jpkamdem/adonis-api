@@ -52,12 +52,45 @@ export default class FactGamesController {
       do {
         awayId = teamIds[randomIntFromInterval(0, teamIds.length)]
       } while (homeId === awayId)
+      const homeScore = randomIntFromInterval(0, 5)
+      const awayScore = randomIntFromInterval(0, 5)
 
       const game = new FactGame()
       game.homeTeamId = homeId
       game.awayTeamId = awayId
-      game.homeScore = randomIntFromInterval(0, 5)
-      game.awayScore = randomIntFromInterval(0, 5)
+      game.homeScore = homeScore
+      game.awayScore = awayScore
+
+      const firstTeam = await Team.findByOrFail('id', homeId)
+      if (!firstTeam) {
+        return response.abort({ message: 'Erreur interne' })
+      }
+      const secondTeam = await Team.findByOrFail('id', awayId)
+      if (!secondTeam) {
+        return response.abort({ message: 'Erreur interne' })
+      }
+
+      if (homeScore > awayScore) {
+        firstTeam.wins = firstTeam.wins + 1
+        secondTeam.loses = secondTeam.loses + 1
+        await firstTeam.save()
+        await secondTeam.save()
+      }
+
+      if (homeScore < awayScore) {
+        secondTeam.wins = secondTeam.wins + 1
+        firstTeam.loses = firstTeam.loses + 1
+        await firstTeam.save()
+        await secondTeam.save()
+      }
+
+      if (homeScore === awayScore) {
+        firstTeam.draws = firstTeam.draws + 1
+        secondTeam.draws = secondTeam.draws + 1
+        await firstTeam.save()
+        await secondTeam.save()
+      }
+
       await game.save()
       return response.status(201).json({ message: 'Match simulé avec succès' })
     } catch (error: unknown) {
