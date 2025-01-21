@@ -47,10 +47,10 @@ export default class FactGamesController {
       }
 
       const teamIds = teams.map((team) => team.id)
-      const homeId = teamIds[randomIntFromInterval(0, teamIds.length)]
+      const homeId = teamIds[randomIntFromInterval(0, teamIds.length - 1)]
       let awayId: number
       do {
-        awayId = teamIds[randomIntFromInterval(0, teamIds.length)]
+        awayId = teamIds[randomIntFromInterval(0, teamIds.length - 1)]
       } while (homeId === awayId)
       const homeScore = randomIntFromInterval(0, 5)
       const awayScore = randomIntFromInterval(0, 5)
