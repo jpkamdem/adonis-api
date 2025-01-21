@@ -1,6 +1,6 @@
 import factory from '@adonisjs/lucid/factories'
 import Player from '#models/player'
-import { Position } from '../../app/enums.js'
+import { Position } from '../../app/enum.js'
 import { randomIntFromInterval } from '../../app/utils.js'
 import { TeamFactory } from './team_factory.js'
 import Incident from '#models/incident'

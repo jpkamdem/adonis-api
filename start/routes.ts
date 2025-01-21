@@ -28,6 +28,7 @@ router
         router.get('/', [UsersController, 'getAllUsers'])
         router.get('/:id', [UsersController, 'getUserById'])
         router.get('/posts/:id', [UsersController, 'getUserPosts'])
+        router.get('/posts/get/all', [UsersController, 'getAllUsersPosts'])
         router.patch('/:id', [UsersController, 'updateUser'])
         router.delete('/:id', [UsersController, 'deleteUser'])
       })

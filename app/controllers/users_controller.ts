@@ -72,6 +72,31 @@ export default class UsersController {
     }
   }
 
+  async getAllUsersPosts({ response }: HttpContext) {
+    try {
+      const allUsersWithPosts = db
+        .query()
+        .from('users')
+        .join('posts', 'users.id', '=', 'posts.user_id')
+        .select(
+          'users.id as user_id',
+          'users.username',
+          'users.email',
+          'users.role',
+          'users.created_at as users_created_at',
+          'users.updated_at as users_updated_at',
+          'posts.id as post_id',
+          'posts.title',
+          'posts.content',
+          'posts.created_at as posts_created_at',
+          'posts.updated_at as posts_updated_at'
+        )
+      return allUsersWithPosts
+    } catch (error: unknown) {
+      return response.abort({ message: extractErrorMessage(error) })
+    }
+  }
+
   async updateUser({ request, response }: HttpContext) {
     try {
       const id = request.params().id
