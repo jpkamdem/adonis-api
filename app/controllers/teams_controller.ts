@@ -62,7 +62,7 @@ export default class TeamsController {
         )
         .where('teams.id', id)
 
-      return response.status(200).json(teamWithPlayers)
+      return teamWithPlayers
     } catch (error: unknown) {
       return response.status(404).json({ message: extractErrorMessage(error) })
     }
