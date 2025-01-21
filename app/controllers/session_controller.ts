@@ -23,34 +23,6 @@ export default class SessionController {
     }
   }
 
-  async register({ request }: HttpContext) {
-    try {
-      const { email, username, password } = request.body()
-      if (!email || !username || !password) {
-        return { message: 'Veuillez remplir tous les champs.' }
-      }
-
-      if (!emailRegex.test(email)) {
-        return { message: 'Votre email est invalide' }
-      }
-
-      const typeCheck = typeof username === 'string' && typeof password === 'string'
-      if (!typeCheck) {
-        return { message: 'Veuillez entrer une chaine de caractère' }
-      }
-
-      const user = new User()
-      user.username = username
-      user.email = email
-      user.password = password
-
-      await user.save()
-      return { message: `Utilisateur ${username} créé avec succès` }
-    } catch (error: unknown) {
-      return { message: extractErrorMessage(error) }
-    }
-  }
-
   async handleRegister({ request }: HttpContext) {
     try {
       const { email, username, password } = await request.validateUsing(registerUserValidation)

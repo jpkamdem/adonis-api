@@ -3,31 +3,34 @@ import User from '#models/user'
 import { extractErrorMessage } from '../utils.js'
 import { emailRegex } from '../enums.js'
 import db from '@adonisjs/lucid/services/db'
+import { userUpdateValidator } from '#validators/user'
 
 export default class UsersController {
-  async getAllUsers() {
+  async getAllUsers({ response }: HttpContext) {
     try {
       const users = await User.all()
       if (!users) {
-        return { message: 'Erreur lors de la récupération des utilisateurs' }
+        return response
+          .status(404)
+          .json({ message: 'Erreur lors de la récupération des utilisateurs' })
       }
 
-      return users
+      return response.status(200).json(users)
     } catch (error: unknown) {
-      return { message: extractErrorMessage(error) }
+      return response.status(404).json({ message: extractErrorMessage(error) })
     }
   }
 
-  async getUserById({ request }: HttpContext) {
+  async getUserById({ request, response }: HttpContext) {
     try {
       const id = request.params().id
       if (!id) {
-        return { message: 'ID manquant' }
+        return response.status(404).json({ message: 'ID manquant' })
       }
 
       const user = await User.findOrFail(id)
       if (!user) {
-        return { message: 'Utilisateur introuvable' }
+        return response.status(404).json({ message: 'Utilisateur introuvable' })
       }
 
       return user
@@ -36,34 +39,17 @@ export default class UsersController {
     }
   }
 
-  async getUserPosts({ request }: HttpContext) {
+  async getUserPosts({ request, response }: HttpContext) {
     try {
       const id = request.params().id
       if (!id) {
-        return { message: 'ID manquant' }
+        return response.status(404).json({ message: 'ID manquant' })
       }
 
       const user = await User.findOrFail(id)
       if (!user) {
-        return { message: 'Utilisateur introuvable' }
+        return response.status(404).json({ message: 'Utilisateur introuvable' })
       }
-
-      // const userWithPosts = await db.rawQuery(
-      //   `SELECT
-      //       users.id,
-      //       users.email,
-      //       users.role,
-      //       users.created_at AS users_created_at,
-      //       users.updated_at AS users_updated_at,
-      //       posts.title,
-      //       posts.content,
-      //       posts.created_at AS posts_created_at,
-      //       posts.updated_at AS posts_updated_at
-      //       FROM users
-      //       JOIN posts
-      //       ON users.id = posts.user_id
-      //       WHERE users.id = ${id};`
-      // )
 
       const userWithPosts = db
         .query()
@@ -83,102 +69,63 @@ export default class UsersController {
           'posts.updated_at as posts_updated_at'
         )
         .where('users.id', id)
-      return userWithPosts
+      return response.status(200).json(userWithPosts)
     } catch (error: unknown) {
       return { message: extractErrorMessage(error) }
     }
   }
 
-  async createUser({ request }: HttpContext) {
-    try {
-      const { email, username, password } = request.body()
-      if (!email || !username || !password) {
-        return { message: 'Veuillez remplir tous les champs.' }
-      }
-
-      if (!emailRegex.test(email)) {
-        return { message: 'Votre email est invalide' }
-      }
-
-      const typeCheck = typeof username === 'string' && typeof password === 'string'
-      if (!typeCheck) {
-        return { message: 'Veuillez entrer une chaine de caractère' }
-      }
-
-      const user = new User()
-      user.username = username
-      user.email = email
-      user.password = password
-
-      await user.save()
-      return { message: `Utilisateur ${username} créé avec succès` }
-    } catch (error: unknown) {
-      return { message: extractErrorMessage(error) }
-    }
-  }
-
-  async updateUser({ request }: HttpContext) {
+  async updateUser({ request, response }: HttpContext) {
     try {
       const id = request.params().id
       if (!id) {
-        return { message: 'ID manquant' }
+        return response.status(404).json({ message: 'ID manquant' })
       }
 
       const user = await User.findOrFail(id)
       if (!user) {
-        return { message: 'Utilisateur introuvable' }
+        return response.status(404).json({ message: 'Utilisateur introuvable' })
       }
 
-      if ('email' in request.body()) {
-        const { email } = request.body()
-        if (!emailRegex.test(email)) {
-          return { message: 'Votre email est invalide' }
-        }
+      const { email, username, password } = await request.validateUsing(userUpdateValidator)
 
+      if (email) {
         user.email = email
       }
 
-      if ('username' in request.body()) {
-        const { username } = request.body()
-        if (typeof username !== 'string') {
-          return { message: 'Veuillez entrer une chaine de caractère' }
-        }
-
+      if (username) {
         user.username = username
       }
 
-      if ('password' in request.body()) {
-        const { password } = request.body()
-        if (typeof password !== 'string') {
-          return { message: 'Veuillez entrer une chaine de caractère' }
-        }
-
+      if (password) {
         user.password = password
       }
 
       await user.save()
-      return { message: `Modification(s) de l'utilisateur effectuée(s) avec succès` }
+      return response
+        .status(201)
+        .json({ message: `Modification(s) de l'utilisateur effectuée(s) avec succès` })
     } catch (error: unknown) {
-      return { message: extractErrorMessage(error) }
+      return response.status(404).json({ message: extractErrorMessage(error) })
     }
   }
 
-  async deleteUser({ request }: HttpContext) {
+  async deleteUser({ request, response }: HttpContext) {
     try {
       const id = request.params().id
       if (!id) {
-        return { message: 'ID manquant' }
+        return response.status(404).json({ message: 'ID manquant' })
       }
 
       const user = await User.findOrFail(id)
       if (!user) {
-        return { message: 'Utilisateur introuvable' }
+        return response.status(404).json({ message: 'Utilisateur introuvable' })
       }
 
       await user.delete()
-      return { message: `Utilisateur supprimé avec succès` }
+      return response.status(204).json({ message: `Utilisateur supprimé avec succès` })
     } catch (error: unknown) {
-      return { message: extractErrorMessage(error) }
+      return response.status(404).json({ message: extractErrorMessage(error) })
     }
   }
 }
